@@ -8,7 +8,7 @@ fun main() {
     println(result)
 
     val query2 = Select("*", From("people"))
-    val result2 = query2.interpret(ctx)
+    val result2 = query2.interpret( Context())
     println("----------------------------")
     println(result2)
 
@@ -20,7 +20,7 @@ fun main() {
             }
         )
     )
-    val result3 = query3.interpret(ctx)
+    val result3 = query3.interpret(Context())
     println("----------------------------")
     println(result3)
 }

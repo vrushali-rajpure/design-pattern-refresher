@@ -3,7 +3,7 @@ package com.example.behavioral.interpreter.sqldsl
 
 class Context {
     private val matchAnyString: (String) -> Boolean = { str -> str.isNotEmpty() }
-    private val matchAllColumns: (String) -> List<String> = { str -> str.split(" ") }
+    private val matchAllColumns: (String) -> List<String> = { str -> listOf(str) }
 
     var column: String = ""
         set(value) {
@@ -11,10 +11,9 @@ class Context {
             createColumnMapper(value)
         }
 
-    lateinit var filter: (String) -> Boolean
 
     lateinit var table: String
-    private var whereFilter: (String) -> Boolean = matchAnyString
+    var filter: (String) -> Boolean = matchAnyString
     private var columnMapper: (String) -> List<String> = matchAllColumns
 
     companion object {
@@ -31,26 +30,18 @@ class Context {
 
 
     fun search(): List<String> {
-        val filter1 = tables
+        return tables
             .filter { (key, _) -> key.contentEquals(table) }
-        val flatMap = filter1
             .flatMap { (_, value) -> value }
-        val map = flatMap
             .map { row: Row -> row.toString() }
-        val flatMap1 = map
             .flatMap(columnMapper)
-        val filter2 = flatMap1
-            .filter(whereFilter)
-        val result = filter2
-        clear()
-        return result
-
+            .filter(filter)
     }
 
     fun clear() {
         column = ""
         columnMapper = matchAllColumns
-        whereFilter = matchAnyString
+        filter = matchAnyString
     }
 
     private fun createColumnMapper(column: String) {
