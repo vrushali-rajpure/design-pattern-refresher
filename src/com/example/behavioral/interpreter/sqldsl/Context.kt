@@ -2,8 +2,8 @@ package com.example.behavioral.interpreter.sqldsl
 
 
 class Context {
-    private val matchAnyString: (String) -> Boolean = { str -> str.isNotEmpty() }
-    private val matchAllColumns: (String) -> List<String> = { str -> listOf(str) }
+    private val matchAnyString: (String) -> Boolean = { it.isNotEmpty() }
+    private val matchAllColumns: (String) -> List<String> = { listOf(it) }
 
     var column: String = ""
         set(value) {
@@ -31,9 +31,9 @@ class Context {
 
     fun search(): List<String> {
         return tables
-            .filter { (key, _) -> key.contentEquals(table) }
-            .flatMap { (_, value) -> value }
-            .map { row: Row -> row.toString() }
+            .filter { it.key.contentEquals(table) }
+            .flatMap { it.value }
+            .map { it.toString() }
             .flatMap(columnMapper)
             .filter(filter)
     }
